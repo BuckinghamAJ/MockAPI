@@ -1,0 +1,6 @@
+endpoints:
+  test:
+    decline_rules:
+    responses:
+      accepted:
+      declined:

@@ -1,0 +1,17 @@
+[project]
+name = "mockapi"
+description = "Generate a REST response based on a configuration for endpoints."
+version = "0.1.0"
+authors = [
+    { name = "Adam Buckingham", email = "adambuckingham@proton.me" }
+]
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]"
+]
+[project.optional-dependencies]
+test = [
+    "pytest >=2.7.3",
+]
+[project.scripts]
+mocker = "mockapi.main:fast_run"
