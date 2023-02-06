@@ -11,10 +11,17 @@ def make_parser():
     parser.add_argument(
         "-f",
         "--response-file",
-        dest="response",
-        default=Path(base_dir, "config", "response.yml"),
+        dest="response_file",
         required=False,
         help="Define mocker's responses with yaml file",
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        dest="directory",
+        default=Path(base_dir, "responses"),
+        required=False,
+        help="Pass in directory with response files",
     )
 
     return parser
