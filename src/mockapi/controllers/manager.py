@@ -3,6 +3,7 @@ from pathlib import Path
 import mockapi
 import logging
 from mockapi.error import MockerException
+from .base import MockController
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ class ResponseManager:
 
     def __init__(self, cfg):
         self.cfg = cfg
+        self.responses: list[MockController] = None
         self.create_responses()
 
     @property
@@ -46,7 +48,7 @@ class ResponseManager:
                 ]
         return _mock_files
 
-    def create_responses(self):
+    def create_responses(self) -> None:
         # Defaults looking in the responses path
         log.debug(
             "🐍 File: controllers/manager.py | Line: 45 | create_responses ~ self.mock_files = %r"

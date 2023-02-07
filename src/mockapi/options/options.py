@@ -18,6 +18,10 @@ healthcheck:
 config = DotDict()
 
 
+class OptionsError(Exception):
+    ...
+
+
 def yaml_loader(cfg_str):
     return safe_load(cfg_str)
 
@@ -35,9 +39,6 @@ def pre_main(
         cfg_default = yaml_loader(cfg_default)
         config.merge(cfg_default)
 
-    # if args is None:
-    # args = sys.argv
-
     if _make_parser:
         parser = _make_parser()
     else:
@@ -52,7 +53,7 @@ def pre_main(
             try:
                 cfg_f = safe_load(cfg_file.read())
             except YAMLError as exc:
-                print(f"YAML Error: {exc}")
+                raise OptionsError("Error Loading Config Yaml") from exc
         config.merge(cfg_f)
 
     config.prefix = sys.prefix

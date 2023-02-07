@@ -2,8 +2,6 @@
 Pulled code from FASTApi docs:
 https://pawamoy.github.io/posts/unify-logging-for-a-gunicorn-uvicorn-app/
 """
-
-import os
 import logging
 import sys
 
