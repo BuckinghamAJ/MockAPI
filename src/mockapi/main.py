@@ -5,6 +5,7 @@ from mockapi.log import configure_logger
 from gunicorn.app.base import BaseApplication
 from mockapi.controllers.manager import ResponseManager
 from uvicorn import run
+import sys
 import logging
 
 app = FastAPI(title=name, description=description, version=version)
@@ -35,12 +36,11 @@ class StandaloneApplication(BaseApplication):
 
 def fast_run():
 
-    log_options = configure_logger()
+    config = pre_main(app_name=name, app_version=version, args=sys.argv[1:])
+    log_options = configure_logger(config)
 
-    cfg = pre_main(app_name=name, app_version=version)
-
-    cfg.merge(log_options)
-    StandaloneApplication(app, cfg).run()
+    config.merge(log_options)
+    StandaloneApplication(app, config).run()
 
 
 if __name__ == "__main__":

@@ -10,9 +10,6 @@ import sys
 from gunicorn.glogging import Logger
 from loguru import logger
 
-LOG_LEVEL = logging.getLevelName(os.environ.get("LOG_LEVEL", "DEBUG"))
-JSON_LOGS = True if os.environ.get("JSON_LOGS", "0") == "1" else False
-WORKERS = int(os.environ.get("GUNICORN_WORKERS", "5"))
 
 """
 logging process:
@@ -20,6 +17,7 @@ import logging
 
 log = logging.getLogger(__name__)
 """
+LOG_LEVEL = None
 
 
 class InterceptHandler(logging.Handler):
@@ -52,7 +50,12 @@ class StubbedGunicornLogger(Logger):
         self.access_logger.setLevel(LOG_LEVEL)
 
 
-def configure_logger() -> dict:
+def configure_logger(cfg) -> dict:
+    global LOG_LEVEL
+    LOG_LEVEL = logging.getLevelName(cfg.mockapi.get("log_level", "DEBUG"))
+    JSON_LOG = True if cfg.mockapi.get("JSON_LOGS", "0") == "1" else False
+    WORKERS = cfg.mockapi.get("workers", 5)
+
     intercept_handler = InterceptHandler()
     # logging.basicConfig(handlers=[intercept_handler], level=LOG_LEVEL)
     # logging.root.handlers = [intercept_handler]
@@ -72,7 +75,7 @@ def configure_logger() -> dict:
             seen.add(name.split(".")[0])
             logging.getLogger(name).handlers = [intercept_handler]
 
-    logger.configure(handlers=[{"sink": sys.stdout, "serialize": JSON_LOGS}])
+    logger.configure(handlers=[{"sink": sys.stdout, "serialize": JSON_LOG}])
 
     options = {
         "bind": "0.0.0.0",

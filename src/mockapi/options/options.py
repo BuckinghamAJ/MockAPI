@@ -1,11 +1,12 @@
 from typing import Callable, List
 from .parser import make_parser
-from yaml import safe_load
+from yaml import safe_load, YAMLError
 from .dotdict import DotDict
 import sys
+from pathlib import Path
 
 config_defaults = """
-fast_api:
+mockapi:
     host: localhost
     port: 8000
 
@@ -28,7 +29,6 @@ def pre_main(
     _make_parser: Callable = make_parser,
     cfg_default: dict = config_defaults,
 ):
-    # TODO: Merge Config with Parser
     config.app = app_name
     config.version = app_version
     if cfg_default:
@@ -46,6 +46,14 @@ def pre_main(
     cli = parser.parse_args(args)
 
     config.merge(cli)
+    if config.mock_config:
+        cli_config: Path = config.mock_config
+        with cli_config.open("r") as cfg_file:
+            try:
+                cfg_f = safe_load(cfg_file.read())
+            except YAMLError as exc:
+                print(f"YAML Error: {exc}")
+        config.merge(cfg_f)
 
     config.prefix = sys.prefix
 

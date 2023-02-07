@@ -23,17 +23,24 @@ class ResponseManager:
         _mock_files = self._mock_files
         if _mock_files is NotFound:
             if cfg.directory:
-                log.debug("Directory -> %r" % (cfg.directory))
+                log.debug(
+                    "🐍 File: controllers/manager.py | Line: 26 | mock_files ~ cfg.directory = %r"
+                    % (cfg.directory,)
+                )
                 _mock_files = [
-                    rsp_path
+                    str(rsp_path)
                     for rsp_path in Path(cfg.directory).glob("*")
                     if str(rsp_path.name).startswith("mock_")
                 ]
             elif cfg.response_file:
+                log.debug(
+                    "🐍 File: controllers/manager.py | Line: 36 | mock_files ~ cfg.response_file = %r"
+                    % (cfg.response_file)
+                )
                 _mock_files = [Path(cfg.response_file)]
             else:
                 _mock_files = [
-                    rsp_path
+                    str(rsp_path)
                     for rsp_path in Path(mockapi.__path__[0], "responses").glob("*")
                     if str(rsp_path.name).startswith("mock_")
                 ]
@@ -41,7 +48,10 @@ class ResponseManager:
 
     def create_responses(self):
         # Defaults looking in the responses path
-        log.debug("Mock Files Found -> %r" % (self.mock_files))
+        log.debug(
+            "🐍 File: controllers/manager.py | Line: 45 | create_responses ~ self.mock_files = %r"
+            % (self.mock_files,)
+        )
         for mock_file in self.mock_files:
             if mock_file.endswith(".json"):
                 ...

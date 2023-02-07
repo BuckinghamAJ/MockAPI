@@ -9,6 +9,15 @@ def make_parser():
     parser = ArgumentParser()
 
     parser.add_argument(
+        "-c",
+        "--config",
+        dest="mock_config",
+        default=Path(base_dir, "config", "config.yml"),
+        required=False,
+        help="Define mocker's responses with yaml file",
+    )
+
+    parser.add_argument(
         "-f",
         "--response-file",
         dest="response_file",
