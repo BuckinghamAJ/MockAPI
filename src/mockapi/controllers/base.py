@@ -1,10 +1,12 @@
 """Abstract Base Class for the different endpoint controllers. """
 from mockapi.options.dotdict import DotDict
 from abc import abstractmethod, ABC
+from pathlib import Path
 
 
-class MockController(ABC):
-    def __init__(self, cfg: DotDict) -> None:
+class AbstractMockController(ABC):
+    def __init__(self, file: Path, cfg: DotDict) -> None:
+        self.file = file
         self.cfg = cfg
 
     @property
@@ -18,5 +20,11 @@ class MockController(ABC):
         raise NotImplemented
 
     @abstractmethod
-    async def parse_file(self, file):
+    async def parse_file(self):
         raise NotImplemented
+
+
+class MockController(AbstractMockController):
+    @property
+    def end_point(self):
+        return self.file.stem
